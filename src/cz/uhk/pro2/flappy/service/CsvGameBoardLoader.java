@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
 
 import cz.uhk.pro2.flappy.game.GameBoard;
 import cz.uhk.pro2.flappy.game.Tile;
@@ -25,9 +27,23 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 	
 			String[] line = br.readLine().split(";");
 			int typeCount = Integer.parseInt(line[0]);
-			// ZATIM PRESKOCIME radky s definicemi typu dlazdic
+			// radky s definicemi typu dlazdic
+			Map<String, Tile> tileTypes = new HashMap<>();
 			for (int i = 0; i < typeCount; i++) {
-				br.readLine();
+				line = br.readLine().split(";");
+				String tileType = line[0];
+				String clazz = line[1];
+				int x = Integer.parseInt(line[2]);
+				int y = Integer.parseInt(line[3]);
+				int w = Integer.parseInt(line[4]);
+				int h = Integer.parseInt(line[5]);
+				String url = line[6];
+				Tile tile = createTile(clazz, x, y, w, h); 
+				tileTypes.put(tileType, tile);
+				
+				
+				
+				
 
 			}
 			line = br.readLine().split(";");
@@ -48,10 +64,10 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 						cell = "";
 
 					}
-					if(!"".equals(cell)){
-						tiles[i][j] = new WallTile();
+					//ziskame odpovidajici typ dlazdice z hashmapy
+						tiles[i][j] = tileTypes.get(cell);
 						
-					}
+					
 
 					
 				}
@@ -64,5 +80,11 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 
 		}
 	}
+
+	private Tile createTile(String clazz, int x, int y, int w, int h) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 
 }
