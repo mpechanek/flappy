@@ -17,8 +17,8 @@ public class GameBoard implements TickAware {
 
 	public GameBoard() {
 		tiles = new Tile[20][20];
-		tiles[6][4] = new WallTile();
-		tiles[1][1] = new WallTile();
+		//tiles[6][4] = new WallTile();
+		//tiles[1][1] = new WallTile();
 		bird = new Bird(viewportWidth / 2, tiles.length * Tile.SIZE / 2);
 
 	}
