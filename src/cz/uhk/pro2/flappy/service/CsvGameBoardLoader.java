@@ -37,6 +37,7 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 			int typeCount = Integer.parseInt(line[0]);
 			// radky s definicemi typu dlazdic
 			Map<String, Tile> tileTypes = new HashMap<>();
+			BufferedImage imageOfTheBird = null;
 			for (int i = 0; i < typeCount; i++) {
 				line = br.readLine().split(";");
 				String tileType = line[0];
@@ -46,9 +47,19 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 				int w = Integer.parseInt(line[4]);
 				int h = Integer.parseInt(line[5]);
 				String url = line[6];
-				Tile tile = createTile(clazz, x, y, w, h, url);
-				tileTypes.put(tileType, tile);
+				if (clazz.equals("Bird")){
+					//specialni radek urcujici obrazek ptaka
+					 imageOfTheBird = loadImage(x, y, w, h, url);
+				}
+				else{
+					//normalni dlazdice
+					Tile tile = createTile(clazz, x, y, w, h, url);
+					tileTypes.put(tileType, tile);
 
+					
+					
+				}
+				
 			}
 			line = br.readLine().split(";");
 			int rows = Integer.parseInt(line[0]);
@@ -74,7 +85,7 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 				}
 
 			}
-			GameBoard gb = new GameBoard(tiles);
+			GameBoard gb = new GameBoard(tiles, imageOfTheBird);
 			return gb;
 		} catch (IOException e) {
 			throw new RuntimeException("Chyba pri cteni souboru", e);
@@ -83,16 +94,9 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 	}
 
 	private Tile createTile(String clazz, int x, int y, int w, int h, String url) {
-		// stahnout obrazek z URL a uložit do promìnné
+	
 		try {
-			BufferedImage originalImage = ImageIO.read(new URL(url));
-			// Vyriznout odpovidajici sprite z velkeho obrazku s mnoha sprity
-			BufferedImage croppedImage = originalImage.getSubimage(x, y, w, h);
-			//zvetsime/zmensime obrazek tak, aby sedel na velikost dlazdice
-			BufferedImage resizedImage = new BufferedImage(Tile.SIZE, Tile.SIZE, BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g = resizedImage.createGraphics();
-			g.drawImage(croppedImage, 0, 0, Tile.SIZE, Tile.SIZE, null);
-			//vytvorime odpovidajici typ dlazdice
+			BufferedImage resizedImage = loadImage(x, y, w, h, url);
 			switch(clazz){
 			case "Wall":
 				return new WallTile(resizedImage);
@@ -112,6 +116,19 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 			throw new RuntimeException("Chyba pri cteni obrazku" + clazz + "z URL" + url, e);
 		}
 	
+	}
+
+	private BufferedImage loadImage(int x, int y, int w, int h, String url) throws IOException, MalformedURLException {
+		// stahnout obrazek z URL a uložit do promìnné
+		BufferedImage originalImage = ImageIO.read(new URL(url));
+		// Vyriznout odpovidajici sprite z velkeho obrazku s mnoha sprity
+		BufferedImage croppedImage = originalImage.getSubimage(x, y, w, h);
+		//zvetsime/zmensime obrazek tak, aby sedel na velikost dlazdice
+		BufferedImage resizedImage = new BufferedImage(Tile.SIZE, Tile.SIZE, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = resizedImage.createGraphics();
+		g.drawImage(croppedImage, 0, 0, Tile.SIZE, Tile.SIZE, null);
+		//vytvorime odpovidajici typ dlazdice
+		return resizedImage;
 	}
 
 }
