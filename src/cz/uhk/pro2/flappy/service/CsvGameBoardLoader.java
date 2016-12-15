@@ -17,6 +17,7 @@ import javax.management.RuntimeErrorException;
 
 import cz.uhk.pro2.flappy.game.GameBoard;
 import cz.uhk.pro2.flappy.game.Tile;
+import cz.uhk.pro2.flappy.game.tiles.BonusTile;
 import cz.uhk.pro2.flappy.game.tiles.EmptyTile;
 import cz.uhk.pro2.flappy.game.tiles.WallTile;
 
@@ -47,13 +48,15 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 				int w = Integer.parseInt(line[4]);
 				int h = Integer.parseInt(line[5]);
 				String url = line[6];
+				String referencedTileType = (line.length >= 8) ? line[7]:"";//NEPOVINNY ODKAZ, pouzivame u bonusu
+				Tile referencedTile = tileTypes.get(referencedTileType);
 				if (clazz.equals("Bird")){
 					//specialni radek urcujici obrazek ptaka
 					 imageOfTheBird = loadImage(x, y, w, h, url);
 				}
 				else{
 					//normalni dlazdice
-					Tile tile = createTile(clazz, x, y, w, h, url);
+					Tile tile = createTile(clazz, x, y, w, h, url, referencedTile);
 					tileTypes.put(tileType, tile);
 
 					
@@ -93,7 +96,7 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 		}
 	}
 
-	private Tile createTile(String clazz, int x, int y, int w, int h, String url) {
+	private Tile createTile(String clazz, int x, int y, int w, int h, String url, Tile referencedTile) {
 	
 		try {
 			BufferedImage resizedImage = loadImage(x, y, w, h, url);
@@ -103,7 +106,7 @@ public class CsvGameBoardLoader implements GameBoardLoader {
 			case "Empty":
 				return new EmptyTile(resizedImage);
 			case "Bonus":
-				return new EmptyTile(resizedImage);
+				return new BonusTile(resizedImage, referencedTile);
 			
 			}
 			//ani jedna vetev switch/case nevyhovovala
