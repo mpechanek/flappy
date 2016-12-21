@@ -3,7 +3,9 @@ package cz.uhk.pro2.flappy.game;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import cz.uhk.pro2.flappy.game.tiles.BonusTile;
 import cz.uhk.pro2.flappy.game.tiles.WallTile;
+import cz.uhk.pro2.flappy.game.Tile;
 
 /**
  * 
@@ -42,14 +44,28 @@ public class GameBoard implements TickAware {
 			// chceme, aby se svet "tocil" dokola,
 			// j2 se pohybuje 0.... pocet sloupcu -1
 			for (int j = minJ; j < maxJ; j++) {
-				int j2 = j % tiles[0].length;
+				int j2 = j % tiles[i].length;
 
 				Tile t = tiles[i][j2];
-				if (t != null) {// je na souradnicich i,j dlazdice??
+				
+				if (t != null){// je na souradnicich i,j dlazdice??
 					int screenX = j * Tile.SIZE - shiftX;
 					int screenY = i * Tile.SIZE;
 					// nakreslime dlazdici
 					t.draw(g, screenX, screenY);
+					
+					if(t instanceof BonusTile){
+						if (bird.collidesWithRectangle(screenX, screenY, Tile.SIZE, Tile.SIZE)) {
+							((BonusTile) t).setOn(false);
+
+						}
+						if (shiftX % 200 == 0) {
+							((BonusTile) t).setOn(true);
+						}
+						
+						
+						
+					}
 					// otestujeme moznou kolizi dlazdice s ptakem
 					if (t instanceof WallTile){
 						//dlazdice je typu zed

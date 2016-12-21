@@ -35,7 +35,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public MainWindow() {
-		try (InputStream is = new FileInputStream("flappy-level.csv")) {
+		try (InputStream is = new FileInputStream("levelB.csv")) {
 			GameBoardLoader loader = new CsvGameBoardLoader(is);
 			gameBoard = loader.loadLevel();
 
