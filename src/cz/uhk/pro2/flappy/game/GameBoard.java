@@ -69,11 +69,12 @@ public class GameBoard implements TickAware {
 					// otestujeme moznou kolizi dlazdice s ptakem
 					if (t instanceof WallTile){
 						//dlazdice je typu zed
-					if (bird.collidesWithRectangle(screenX, screenY, Tile.SIZE, Tile.SIZE)){
-						//doslo ke kolizi ptaka s dlazdici
-						System.out.println("Kolize");
-						 gameOver = true;
-					}
+						if (bird.collidesWithRectangle(screenX, screenY, Tile.SIZE, Tile.SIZE)){
+							//doslo ke kolizi ptaka s dlazdici
+							System.out.println("Kolize");
+							 gameOver = true;
+						}
+						
 					}
 				}
 

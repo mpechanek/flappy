@@ -35,7 +35,7 @@ public class MainWindow extends JFrame {
 	}
 
 	public MainWindow() {
-		try (InputStream is = new FileInputStream("levelB.csv")) {
+		/*try (InputStream is = new FileInputStream("levelB.csv")) {
 			GameBoardLoader loader = new CsvGameBoardLoader(is);
 			gameBoard = loader.loadLevel();
 
@@ -46,7 +46,9 @@ public class MainWindow extends JFrame {
 			e1.printStackTrace();
 		}
 
-		//gameBoard = new GameBoard();
+		//gameBoard = new GameBoard();*/
+		LevelPicker picker = new LevelPicker();
+		gameBoard = picker.pickAndLoadLevel();
 		add(pnl, BorderLayout.CENTER);
 		pnl.setPreferredSize(new Dimension(200, gameBoard.getHeightPix()));// TODO
 		setDefaultCloseOperation(EXIT_ON_CLOSE);

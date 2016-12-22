@@ -14,6 +14,15 @@ public BonusTile(Image image,Tile emptyTile){
 	super(image);
 	this.emptyTile = emptyTile;
 }
+/**
+ * Kopirovaci(klonovaci konstruktor
+ * @param original
+ */
+public BonusTile(BonusTile original){
+	super(original.image);
+	emptyTile = original.emptyTile;	
+	
+}
 @Override
 public void draw(Graphics g, int x, int y) {
 	if (on) {
